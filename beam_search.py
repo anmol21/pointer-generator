@@ -77,6 +77,11 @@ class Hypothesis(object):
     # normalize log probability by number of tokens (otherwise longer sequences always have lower probability)
     return self.log_prob / len(self.tokens)
 
+   @property
+   def score(self):
+     # normalize log probability by number of tokens (otherwise longer sequences always have lower probability)
+     return (self.log_prob / len(self.tokens) - 0.4*len(self.p_gens)*max(0,0.5 - sum(self.p_gens)/len(self.p_gens))
+
 
 def run_beam_search(sess, model, vocab, batch):
   """Performs beam search decoding on the given example.
@@ -162,5 +167,5 @@ def run_beam_search(sess, model, vocab, batch):
   return hyps_sorted[0]
 
 def sort_hyps(hyps):
-  """Return a list of Hypothesis objects, sorted by descending average log probability"""
-  return sorted(hyps, key=lambda h: h.avg_log_prob, reverse=True)
+  """Return a list of Hypothesis objects, sorted by descending score"""
+  return sorted(hyps, key=lambda h: h.score, reverse=True)
