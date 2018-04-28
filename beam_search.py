@@ -88,8 +88,10 @@ class Hypothesis(object):
   @property
   def score(self):
     # normalize log probability by number of tokens (otherwise longer sequences always have lower probability)
-    return self.log_prob / len(self.tokens) - 0.4*len(self.p_gens)*max(0,0.5 - self.sum_p_gens/len(self.p_gens))
-
+    if  len(self.tokens >= 15):
+        return self.log_prob / len(self.tokens) - 0.5*len(self.p_gens)*max(0,0.4 - self.sum_p_gens/len(self.p_gens))
+    else:
+        return self.avg_log_prob
 
 
 def run_beam_search(sess, model, vocab, batch):
