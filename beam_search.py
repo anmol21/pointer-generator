@@ -73,6 +73,14 @@ class Hypothesis(object):
     return sum(self.log_probs)
 
   @property
+  def sum_p_gens(self):
+    # the log probability of the hypothesis so far is the sum of the log probabilities of the tokens so far
+    x = float(0)
+    for y in self.p_gens:
+        x = x + y[0]
+    return x
+
+  @property
   def avg_log_prob(self):
     # normalize log probability by number of tokens (otherwise longer sequences always have lower probability)
     return self.log_prob / len(self.tokens)
@@ -80,7 +88,7 @@ class Hypothesis(object):
   @property
   def score(self):
     # normalize log probability by number of tokens (otherwise longer sequences always have lower probability)
-    return self.log_prob / len(self.tokens) - 0.4*len(self.p_gens)*max(0,0.5 - sum(self.p_gens)/len(self.p_gens))
+    return self.log_prob / len(self.tokens) - 0.4*len(self.p_gens)*max(0,0.5 - self.sum_p_gens/len(self.p_gens))
 
 
 
